@@ -13,7 +13,7 @@ class LoginMetalMiningConstruction(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
-        self.base_url = "http://it.ogame.gameforge.com/"
+        self.base_url = "http://it.ogame.gameforge.com"
         self.verificationErrors = []
         self.accept_next_alert = True
 	
