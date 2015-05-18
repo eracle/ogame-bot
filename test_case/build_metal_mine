@@ -3,47 +3,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://it.ogame.gameforge.com/" />
-<title>login</title>
+<link rel="selenium.base" href="http://s132-it.ogame.gameforge.com/" />
+<title>build_metal_mine</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">login</td></tr>
+<tr><td rowspan="1" colspan="3">build_metal_mine</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/</td>
+	<td>/game/index.php?page=overview</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//ul[@id='menuTable']/li[2]/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=loginBtn</td>
+	<td>id=details</td>
 	<td></td>
-</tr>
-<tr>
-	<td>select</td>
-	<td>id=serverLogin</td>
-	<td>label=Fidis</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=usernameLogin</td>
-	<td>ercole.adeluca@gmail.com</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=passwordLogin</td>
-	<td>arkos1987?</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>id=loginSubmit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectWindow</td>
-	<td>null</td>
+	<td>css=a.build-it &gt; span</td>
 	<td></td>
 </tr>
 </tbody></table>
