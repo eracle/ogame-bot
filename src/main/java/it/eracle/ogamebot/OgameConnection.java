@@ -2,17 +2,21 @@ package it.eracle.ogamebot;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represent an active current connection with a specified username and password to a specified Ogame server.
  * Created by eracle on 29/07/15.
  */
 public class OgameConnection {
-    public void OgameConnection() {
+
+    /** Selenium Driver */
+    private WebDriver driver;
+
+    public OgameConnection() {
+        driver = new FirefoxDriver();
     }
 
     /**
@@ -27,34 +31,33 @@ public class OgameConnection {
      */
     public void login(String serverUrl, String username, String password) {
 
-        // The Firefox driver supports javascript
-        WebDriver driver = new FirefoxDriver();
+        //I don't know what does this:
+        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
-        // Go to the Google Suggest home page
         driver.get(serverUrl);
+        driver.findElement(By.id("loginBtn")).click();
+        driver.findElement(By.id("usernameLogin")).clear();
+        driver.findElement(By.id("usernameLogin")).sendKeys(username);
+        driver.findElement(By.id("passwordLogin")).clear();
+        driver.findElement(By.id("passwordLogin")).sendKeys(password);
+        driver.findElement(By.id("loginSubmit")).click();
 
-        // Enter the query string "Cheese"
-        WebElement query = driver.findElement(By.name("q"));
-        query.sendKeys("Cheese");
-
-        // Sleep until the div we want is visible or 5 seconds is over
-        long end = System.currentTimeMillis() + 5000;
-        while (System.currentTimeMillis() < end) {
-            WebElement resultsDiv = driver.findElement(By.className("gssb_e"));
-
-            // If results have been returned, the results are displayed in a drop down.
-            if (resultsDiv.isDisplayed()) {
-                break;
-            }
+        if(driver.findElement(By.cssSelector("div.icon")).getText().equals("Your username or password is wrong!")) {
+            this.close();
+            throw new IllegalArgumentException("Your username or password is wrong!");
         }
+        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+       //
 
-        // And now list the suggestions
-        List<WebElement> allSuggestions = driver.findElements(By.xpath("//td[@class='gssb_a gbqfsf']"));
+        //TODO: universe selection
 
-        for (WebElement suggestion : allSuggestions) {
-            System.out.println(suggestion.getText());
-        }
 
+    }
+
+    /**
+     * Close the connection.
+     */
+    public void close(){
         driver.quit();
     }
 }
