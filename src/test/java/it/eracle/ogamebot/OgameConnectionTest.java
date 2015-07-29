@@ -10,15 +10,16 @@ import java.net.URL;
 /**
  * Unit test for simple App.
  */
-public class LoginTest
+public class OgameConnectionTest
     extends TestCase
 {
     public void testlogin() throws Exception {
-        String serverUrl="";
+        String serverUrl="http://en.ogame.gameforge.com/";
         String username="";
         String password="";
-        OgameConnection connection = Login.login(serverUrl, username, password);
-        Assert.assertNull(connection);
+        OgameConnection connection = new OgameConnection();
+        connection.login(serverUrl, username, password);
+        Assert.assertNotNull(connection);
     }
 
 
