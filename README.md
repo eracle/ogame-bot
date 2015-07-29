@@ -8,7 +8,8 @@ From the server point of view, it must behave as a human being, and the Ogame pr
 In order to not being tracked Selenium Web Driver is used, and Java as a main programming language.
 
 ## Basic Features ##
-# Implemented: #
+In order to let the artificial intelligence interactions with the front-end, many basic functionality must to be implemented,
+# Already Implemented: #
 
 # Todo: #
 - Login
@@ -18,7 +19,7 @@ In order to not being tracked Selenium Web Driver is used, and Java as a main pr
 - Fake Messages and Fake Social Behaviours
 
 ## Advanced Features ##
-# Implemented: #
+# Already Implemented: #
 
 # Todo: #
 - Artificial Intelligence
