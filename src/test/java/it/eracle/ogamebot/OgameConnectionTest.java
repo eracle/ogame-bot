@@ -1,6 +1,7 @@
 package it.eracle.ogamebot;
 
 
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -47,8 +48,15 @@ public class OgameConnectionTest
 
         OgameConnection connection = new OgameConnection();
         connection.login(url, username, password,universe);
+
+        Assert.assertTrue("Not Positive Value of metal", connection.getMetal() > 0);
+        Assert.assertTrue("Not Positive Value of crystal", connection.getCrystal() > 0);
+        Assert.assertTrue("Not Positive or zero Value of deuterium", connection.getDeuterium() >= 0);
+        Assert.assertTrue("Not Positive or zero Value of energy", connection.getEnergy() >= 0);
+
         connection.close();
     }
+
     //@Test
     //TODO:test the open properties functionality
     public void testopenProperties(){
