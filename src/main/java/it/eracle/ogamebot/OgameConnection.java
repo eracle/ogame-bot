@@ -4,7 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.support.ui.Select;
 
 /**
  * Represent an active current connection with a specified username and password to a specified Ogame server.
@@ -27,12 +28,16 @@ public class OgameConnection {
      * @param serverUrl
      * @param username
      * @param password
+     * @param universe
      * @return
      */
-    public void login(String serverUrl, String username, String password) {
+    public void login(String serverUrl, String username, String password, String universe) {
 
         //I don't know what does this:
         //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+        if(!serverUrl.startsWith("http://"))
+            serverUrl="http://"+serverUrl;
 
         driver.get(serverUrl);
         driver.findElement(By.id("loginBtn")).click();
@@ -40,16 +45,22 @@ public class OgameConnection {
         driver.findElement(By.id("usernameLogin")).sendKeys(username);
         driver.findElement(By.id("passwordLogin")).clear();
         driver.findElement(By.id("passwordLogin")).sendKeys(password);
+
+        new Select(driver.findElement(By.id("serverLogin"))).selectByVisibleText(universe);
+
         driver.findElement(By.id("loginSubmit")).click();
 
-        if(driver.findElement(By.cssSelector("div.icon")).getText().equals("Your username or password is wrong!")) {
-            this.close();
-            throw new IllegalArgumentException("Your username or password is wrong!");
+        try{
+            if(driver.findElement(By.cssSelector("div.icon")).getText().equals("Your username or password is wrong!")) {
+                this.close();
+                throw new IllegalArgumentException("Your username or password is wrong!");
+            }
+        }catch(org.openqa.selenium.NoSuchElementException e ){
+            //TODO: Logging a successful login
+            //TODO: A better handling of the exceptions flow
         }
-        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-       //
 
-        //TODO: universe selection
+
 
 
     }
