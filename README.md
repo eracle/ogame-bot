@@ -12,8 +12,9 @@ In order to not being tracked Selenium Web Driver is used, and Java as a main pr
 In order to let the artificial intelligence interact with the front-end, many basic functionality must to be implemented,
 
 # Already Implemented: #
-- Basic Login
-- Reading the Resources owned 
+- Basic Login;
+- Reading the Resources owned;
+- Check if metal mine can be build;
 
 # Todo: #
 - Login: By using username and password read from a config file.

@@ -2,10 +2,13 @@ package it.eracle.ogamebot;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Represent an active current connection with a specified username and password to a specified Ogame server.
@@ -16,35 +19,31 @@ public class OgameConnection {
     /** Selenium Driver */
     private WebDriver driver;
 
-    /** Connection Status */
+    /** Connection Status
     private enum status {
         DISCONNECTED, CONNECTED
     }
-
-    private status connectionStatus;
-
-    public OgameConnection() {
-        driver = new FirefoxDriver();
-        this.connectionStatus = status.DISCONNECTED;
-    }
+     */
+    //private status connectionStatus;
 
     /**
-     * Represent the action of a login to a specified server and with a specified username and password.
-     * Once login the <code>OgameConnection</code> object instance is changed.
+     * Constructor which also does the action of login to a specified server, and universe,
+     * with a specified username and password.
      * TODO: Finish the documentation after implementation phase. FDAIP
      *
      * @param serverUrl
+     * @param universe
      * @param username
      * @param password
-     * @param universe
      * @return
      */
-    public void login(String serverUrl, String username, String password, String universe) {
+    public OgameConnection(String serverUrl,  String universe, String username, String password) {
+        //class initialization related stuffs
+        driver = new FirefoxDriver();
+        //this.connectionStatus = status.DISCONNECTED;
 
-        //I don't know what does this:
-        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-
-        if(!serverUrl.startsWith("http://"))
+        //login stuffs
+        if(!serverUrl.equals("") && !serverUrl.startsWith("http://"))
             serverUrl="http://"+serverUrl;
 
         driver.get(serverUrl);
@@ -58,21 +57,21 @@ public class OgameConnection {
 
         driver.findElement(By.id("loginSubmit")).click();
 
+        //old check if the password was wrong
+        /*
         try{
             if(driver.findElement(By.cssSelector("div.icon")).getText().equals("Your username or password is wrong!")) {
                 this.close();
                 throw new IllegalArgumentException("Your username or password is wrong!");
             }
         }catch(org.openqa.selenium.NoSuchElementException e ){
-            this.connectionStatus = status.CONNECTED;
+            //this.connectionStatus = status.CONNECTED;
             //TODO: Logging a successful login
             //TODO: A better handling of the exceptions flow
         }
-
-
-
-
+        */
     }
+
 
     /**
      * Return the quantity of the metal resource owned.
@@ -111,7 +110,34 @@ public class OgameConnection {
      */
     public void close(){
         driver.quit();
-        this.connectionStatus = status.DISCONNECTED;
+        //this.connectionStatus = status.DISCONNECTED;
     }
+
+    /**
+     * Check if a mine can be build. Return true if it can, false otherwise.
+     * @return  True if the mine can be build, false otherwise.
+     */
+    public boolean canBuildMetalMine() {
+        driver.findElement(By.linkText("Resources")).click();
+        driver.findElement(By.id("details")).click();
+
+        //I need to wait for the element a.build-it > span
+        WebElement myDynamicElement = (new WebDriverWait(driver, 10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a.build-it > span")));
+
+
+        String buildStr = myDynamicElement.getText().trim();
+        System.out.print(buildStr);
+        return buildStr.equals("Improve");
+    }
+
+    /**
+     * Build a mine if it can be build.
+     */
+    public void buildMetalMine() {
+       //TODO: finish the doc and implementation
+    }
+
+
 }
 
