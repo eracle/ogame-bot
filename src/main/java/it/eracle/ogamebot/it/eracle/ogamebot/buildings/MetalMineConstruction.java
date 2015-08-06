@@ -50,6 +50,17 @@ public class MetalMineConstruction {
         return crystal_required;
     }
 
+    @Override
+    public String toString() {
+        return "MetalMineConstruction{" +
+                "production_duration=" + production_duration +
+                ", energy_needed=" + energy_needed +
+                ", metal_required=" + metal_required +
+                ", crystal_required=" + crystal_required +
+                ", deuterium_required=" + deuterium_required +
+                '}';
+    }
+
     public int getDeuterium_required() {
         return deuterium_required;
     }

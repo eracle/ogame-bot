@@ -11,6 +11,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.IllegalFormatException;
+import java.util.List;
+
 /**
  * Represent an active current connection with a specified username and password to a specified Ogame server.
  * Created by eracle on 29/07/15.
@@ -129,7 +132,7 @@ public class OgameConnection {
 
 
         String buildStr = myDynamicElement.getText().trim();
-        System.out.print(buildStr);
+        //System.out.print(buildStr);
         return buildStr.equals("Improve");
     }
 
@@ -146,32 +149,56 @@ public class OgameConnection {
 
         driver.findElement(By.xpath("//ul[@id='menuTable']/li[2]/a/span")).click();
         driver.findElement(By.id("details")).click();
-        //TODO: parse as a duration
 
-        WebElement durationElement = (new WebDriverWait(driver, 10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("buildDuration")));
 
-        int duration = Integer.parseInt(durationElement.getText().replace("s", ""));
+        //duration parsing:
+        //TODO: parse as a time interval (weeks,days,hours,minutes,seconds)
+        int duration = Integer.parseInt((new WebDriverWait(driver, 10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("buildDuration"))).getText().replace("s", ""));
 
-        //TODO: learn css selector
-        driver.findElement(By.xpath("//div[@id='content']/ul/li[2]")).click();
-        driver.findElement(By.xpath("//div[@id='content']/ul/li[2]/span")).click();
+        //energy parsing
+        String energy_str = driver.findElement(By.cssSelector(".production_info > li:nth-child(2) > span:nth-child(1)")).getText().trim();
+        int energy = Integer.parseInt(energy_str);
 
-        int energy = Integer.parseInt(driver.findElement(By.xpath("//div[@id='content']/ul/li[2]/span")).getText());
+        //metal parsing
+        List<WebElement> m_elems = driver.findElements(By.cssSelector("li.tooltip:nth-child(1) > div:nth-child(2)"));
+        int metal;
+        if(m_elems.size()==0)
+            metal=0;
+        else if(m_elems.size()==1)
+            metal = Integer.parseInt(m_elems.get(0).getText().trim());
+        else throw new IllegalArgumentException("two or more metal elements selected by css selector");
 
-        //driver.findElement(By.cssSelector("div.cost.")).click();
+        //crystal parsing
+        List<WebElement> c_elems = driver.findElements(By.cssSelector("li.tooltip:nth-child(2) > div:nth-child(2)"));
+        int crystal;
+        if(c_elems.size()==0)
+            crystal=0;
+        else if(c_elems.size()==1)
+            crystal = Integer.parseInt(c_elems.get(0).getText().trim());
+        else throw new IllegalArgumentException("two or more crystal elements selected by css selector");
 
-        int metal = Integer.parseInt(driver.findElement(By.cssSelector("div.cost.")).getText());
+        //deuterium parsing
+        List<WebElement> d_elems = driver.findElements(By.cssSelector("li.tooltip:nth-child(3) > div:nth-child(2)"));
+        int deuterium;
+        if(d_elems.size()==0)
+            deuterium = 0;
+        else if (d_elems.size()==1)
+            deuterium = Integer.parseInt(d_elems.get(0).getText().trim());
+        else throw new IllegalArgumentException("two or more deuterium elements selected by css selector");
 
-        //driver.findElement(By.cssSelector("li.crystal.tooltip > div.cost.")).click();
-
-        int crystal = Integer.parseInt(driver.findElement(By.cssSelector("li.crystal.tooltip > div.cost.")).getText());
-
-        //driver.findElement(By.cssSelector("div.costs_wrap")).click();
-
-        int deuterium = 0; //TODO: deuterium parsing
 
         return new MetalMineConstruction(duration,energy,crystal,metal,deuterium);
+
+    }
+
+    /**
+     * Return true if the construction queue is empty.
+     * @return
+     */
+    public boolean isEmptyConstructionQueue() {
+        //TODO: implementation and docs
+        return true;
     }
 }
 

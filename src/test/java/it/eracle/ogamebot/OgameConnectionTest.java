@@ -66,23 +66,27 @@ public class OgameConnectionTest
         OgameConnection connection = new OgameConnection(url,universe, username, password);
 
         MetalMineConstruction mm = connection.getMetalMineConstruction();
+        //System.out.println(mm.toString());
         Assert.assertNotNull(mm);
 
         Assert.assertTrue(mm.getMetal_required() > 0);
 
         Assert.assertTrue(mm.getCrystal_required()>0);
 
-        Assert.assertTrue(mm.getDeuterium_required()>0);
+        Assert.assertTrue(mm.getDeuterium_required()>=0);
 
         Assert.assertTrue(mm.getEnergy_needed()>0);
 
         Assert.assertTrue(mm.getProduction_duration()>0);
+        boolean canBuildmm = ( connection.getMetal()>=mm.getMetal_required() &&
+            connection.getCrystal()>=mm.getCrystal_required() &&
+            connection.getDeuterium()>=mm.getDeuterium_required() &&
+                    connection.isEmptyConstructionQueue()
+                );
 
+        Assert.assertTrue("Can or cannot build a mine",connection.canBuildMetalMine()==canBuildmm);
 
-        Assert.assertTrue("Cannot build a mine",connection.canBuildMetalMine());
-        //connection.buildMine();
-
-       // connection.login(
+        connection.close();
     }
 
 
