@@ -1,6 +1,7 @@
 package it.eracle.ogamebot;
 
 
+import it.eracle.ogamebot.it.eracle.ogamebot.buildings.MetalMineConstruction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -63,6 +64,20 @@ public class OgameConnectionTest
         String universe="Ganimed";
 
         OgameConnection connection = new OgameConnection(url,universe, username, password);
+
+        MetalMineConstruction mm = connection.getMetalMineConstruction();
+        Assert.assertNotNull(mm);
+
+        Assert.assertTrue(mm.getMetal_required() > 0);
+
+        Assert.assertTrue(mm.getCrystal_required()>0);
+
+        Assert.assertTrue(mm.getDeuterium_required()>0);
+
+        Assert.assertTrue(mm.getEnergy_needed()>0);
+
+        Assert.assertTrue(mm.getProduction_duration()>0);
+
 
         Assert.assertTrue("Cannot build a mine",connection.canBuildMetalMine());
         //connection.buildMine();

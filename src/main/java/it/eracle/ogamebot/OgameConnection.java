@@ -1,5 +1,6 @@
 package it.eracle.ogamebot;
 
+import it.eracle.ogamebot.it.eracle.ogamebot.buildings.MetalMineConstruction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -118,6 +119,7 @@ public class OgameConnection {
      * @return  True if the mine can be build, false otherwise.
      */
     public boolean canBuildMetalMine() {
+        //TODO: the method return true also if the mine is not buildable
         driver.findElement(By.linkText("Resources")).click();
         driver.findElement(By.id("details")).click();
 
@@ -131,6 +133,7 @@ public class OgameConnection {
         return buildStr.equals("Improve");
     }
 
+
     /**
      * Build a mine if it can be build.
      */
@@ -139,5 +142,36 @@ public class OgameConnection {
     }
 
 
+    public MetalMineConstruction getMetalMineConstruction() {
+
+        driver.findElement(By.xpath("//ul[@id='menuTable']/li[2]/a/span")).click();
+        driver.findElement(By.id("details")).click();
+        //TODO: parse as a duration
+
+        WebElement durationElement = (new WebDriverWait(driver, 10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("buildDuration")));
+
+        int duration = Integer.parseInt(durationElement.getText().replace("s", ""));
+
+        //TODO: learn css selector
+        driver.findElement(By.xpath("//div[@id='content']/ul/li[2]")).click();
+        driver.findElement(By.xpath("//div[@id='content']/ul/li[2]/span")).click();
+
+        int energy = Integer.parseInt(driver.findElement(By.xpath("//div[@id='content']/ul/li[2]/span")).getText());
+
+        //driver.findElement(By.cssSelector("div.cost.")).click();
+
+        int metal = Integer.parseInt(driver.findElement(By.cssSelector("div.cost.")).getText());
+
+        //driver.findElement(By.cssSelector("li.crystal.tooltip > div.cost.")).click();
+
+        int crystal = Integer.parseInt(driver.findElement(By.cssSelector("li.crystal.tooltip > div.cost.")).getText());
+
+        //driver.findElement(By.cssSelector("div.costs_wrap")).click();
+
+        int deuterium = 0; //TODO: deuterium parsing
+
+        return new MetalMineConstruction(duration,energy,crystal,metal,deuterium);
+    }
 }
 
