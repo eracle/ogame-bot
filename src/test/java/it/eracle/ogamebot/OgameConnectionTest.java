@@ -1,7 +1,6 @@
 package it.eracle.ogamebot;
 
 
-import it.eracle.ogamebot.it.eracle.ogamebot.buildings.MetalMineConstructionPlan;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,39 +55,6 @@ public class OgameConnectionTest
         connection.close();
     }
 
-    @Test
-    public void testConstructionPlans(){
-        String username="cocorito";
-        String password="cocorito";
-        String url="en.ogame.gameforge.com";
-        String universe="Ganimed";
-
-        OgameConnection connection = new OgameConnection(url,universe, username, password);
-
-        connection.getConstructionPlanManager();
-        MetalMineConstructionPlan mm = connection.getMetalMineConstruction();
-        //System.out.println(mm.toString());
-        Assert.assertNotNull(mm);
-
-        Assert.assertTrue(mm.getMetal_required() > 0);
-
-        Assert.assertTrue(mm.getCrystal_required()>0);
-
-        Assert.assertTrue(mm.getDeuterium_required()>=0);
-
-        Assert.assertTrue(mm.getEnergy_needed()>0);
-
-        Assert.assertTrue(mm.getProduction_duration()>0);
-        boolean canBuildmm = ( connection.getMetal()>=mm.getMetal_required() &&
-            connection.getCrystal()>=mm.getCrystal_required() &&
-            connection.getDeuterium()>=mm.getDeuterium_required() &&
-                    connection.isEmptyConstructionQueue()
-                );
-
-        Assert.assertTrue("Can or cannot build a mine",connection.canBuildMetalMine()==canBuildmm);
-
-        connection.close();
-    }
 
 
 }
