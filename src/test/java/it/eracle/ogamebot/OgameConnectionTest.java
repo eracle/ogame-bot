@@ -1,7 +1,7 @@
 package it.eracle.ogamebot;
 
 
-import it.eracle.ogamebot.it.eracle.ogamebot.buildings.MetalMineConstruction;
+import it.eracle.ogamebot.it.eracle.ogamebot.buildings.MetalMineConstructionPlan;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class OgameConnectionTest
     }
 
     @Test
-    public void testBuildMetalMine(){
+    public void testConstructionPlans(){
         String username="cocorito";
         String password="cocorito";
         String url="en.ogame.gameforge.com";
@@ -65,7 +65,8 @@ public class OgameConnectionTest
 
         OgameConnection connection = new OgameConnection(url,universe, username, password);
 
-        MetalMineConstruction mm = connection.getMetalMineConstruction();
+        connection.getConstructionPlanManager();
+        MetalMineConstructionPlan mm = connection.getMetalMineConstruction();
         //System.out.println(mm.toString());
         Assert.assertNotNull(mm);
 

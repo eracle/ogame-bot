@@ -1,6 +1,6 @@
 package it.eracle.ogamebot;
 
-import it.eracle.ogamebot.it.eracle.ogamebot.buildings.MetalMineConstruction;
+import it.eracle.ogamebot.it.eracle.ogamebot.buildings.MetalMineConstructionPlan;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.IllegalFormatException;
 import java.util.List;
 
 /**
@@ -22,6 +21,9 @@ public class OgameConnection {
 
     /** Selenium Driver */
     private WebDriver driver;
+
+    /** Singleton instance of the constructionPlanManager*/
+    private ConstructionPlanManager constructionPlanManager;
 
     /** Connection Status
     private enum status {
@@ -43,7 +45,8 @@ public class OgameConnection {
      */
     public OgameConnection(String serverUrl,  String universe, String username, String password) {
         //class initialization related stuffs
-        driver = new FirefoxDriver();
+        this.driver = new FirefoxDriver();
+        this.constructionPlanManager = null;
         //this.connectionStatus = status.DISCONNECTED;
 
         //login stuffs
@@ -145,52 +148,7 @@ public class OgameConnection {
     }
 
 
-    public MetalMineConstruction getMetalMineConstruction() {
 
-        driver.findElement(By.xpath("//ul[@id='menuTable']/li[2]/a/span")).click();
-        driver.findElement(By.id("details")).click();
-
-
-        //duration parsing:
-        //TODO: parse as a time interval (weeks,days,hours,minutes,seconds)
-        int duration = Integer.parseInt((new WebDriverWait(driver, 10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("buildDuration"))).getText().replace("s", ""));
-
-        //energy parsing
-        String energy_str = driver.findElement(By.cssSelector(".production_info > li:nth-child(2) > span:nth-child(1)")).getText().trim();
-        int energy = Integer.parseInt(energy_str);
-
-        //metal parsing
-        List<WebElement> m_elems = driver.findElements(By.cssSelector("li.tooltip:nth-child(1) > div:nth-child(2)"));
-        int metal;
-        if(m_elems.size()==0)
-            metal=0;
-        else if(m_elems.size()==1)
-            metal = Integer.parseInt(m_elems.get(0).getText().trim());
-        else throw new IllegalArgumentException("two or more metal elements selected by css selector");
-
-        //crystal parsing
-        List<WebElement> c_elems = driver.findElements(By.cssSelector("li.tooltip:nth-child(2) > div:nth-child(2)"));
-        int crystal;
-        if(c_elems.size()==0)
-            crystal=0;
-        else if(c_elems.size()==1)
-            crystal = Integer.parseInt(c_elems.get(0).getText().trim());
-        else throw new IllegalArgumentException("two or more crystal elements selected by css selector");
-
-        //deuterium parsing
-        List<WebElement> d_elems = driver.findElements(By.cssSelector("li.tooltip:nth-child(3) > div:nth-child(2)"));
-        int deuterium;
-        if(d_elems.size()==0)
-            deuterium = 0;
-        else if (d_elems.size()==1)
-            deuterium = Integer.parseInt(d_elems.get(0).getText().trim());
-        else throw new IllegalArgumentException("two or more deuterium elements selected by css selector");
-
-
-        return new MetalMineConstruction(duration,energy,crystal,metal,deuterium);
-
-    }
 
     /**
      * Return true if the construction queue is empty.
@@ -199,6 +157,16 @@ public class OgameConnection {
     public boolean isEmptyConstructionQueue() {
         //TODO: implementation and docs
         return true;
+    }
+
+    /**
+     * Returns the singleton instance of the ConstructionPlanManager.
+     * @return the singleton instance of the ConstructionPlanManager.
+     */
+    public ConstructionPlanManager getConstructionPlanManager() {
+        if(this.constructionPlanManager==null)
+            this.constructionPlanManager = new ConstructionPlanManager(this.driver);
+        return this.constructionPlanManager;
     }
 }
 
